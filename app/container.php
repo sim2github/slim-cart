@@ -7,24 +7,24 @@ use Slim\Views\TwigExtension;
 use Interop\Container\ContainerInterface;
 
 return [
-  'router' => get(Slim\Router::class),
+	'router' => get(Slim\Router::class),
 
-  Twig::class => function(ContainerInterface $c){
-    $twig = new Twig(__DIR__ . '/../resources/views', [
-      'cache' => false
-    ]);
+	Twig::class => function(ContainerInterface $c){
+		$twig = new Twig(__DIR__ . '/../resources/views', [
+			'cache' => false
+		]);
 
-    $twig->addExtension(new TwigExtension(
-      $c->get('router'),
-      $c->get('request')->getUri()
-    ));
+		$twig->addExtension(new TwigExtension(
+			$c->get('router'),
+			$c->get('request')->getUri()
+		));
 
-    return $twig;
+		return $twig;
 
-  },
+	},
 
-  Product::class => function(ContainerInterface $c){
-  	return new Product;
-  },
+	Product::class => function(ContainerInterface $c){
+		return new Product;
+	},
 
 ];

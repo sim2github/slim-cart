@@ -9,12 +9,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeController{
 
-  public function index(Request $request, Response $response, Twig $view, Product $product){
-  	$products = $product->all();
+	public function index(Request $request, Response $response, Twig $view, Product $product){
+		$products = $product->all();
 
-    return $view->render($response, 'home.twig', [
-    	'products' => $products
-    ]);
-  }
+		return $view->render($response, 'home.twig', [
+			'products' => $products
+		]);
+	}
 
 }
