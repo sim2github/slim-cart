@@ -80,4 +80,18 @@ class Basket{
     return count($this->storage);
   }
 
+  public function subTotal(){
+    $total = 0;
+
+    foreach ($this->all() as $item) {
+      if ($item->outOfStock()) {
+        continue;
+      }
+
+      $total += ($item->price * $item->quantity);
+    }
+
+    return $total;
+  }
+
 }
