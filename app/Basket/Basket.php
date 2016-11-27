@@ -45,8 +45,6 @@ class Basket{
 	}
 
 	public function has(Product $product){
-		// var_dump($_SESSION);
-		// die();
 		return $this->storage->exists($product->id);
 	}
 
