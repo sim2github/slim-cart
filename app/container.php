@@ -2,6 +2,9 @@
 
 use Cart\Basket\Basket;
 use function DI\get;
+use Cart\Models\Address;
+use Cart\Models\Customer;
+use Cart\Models\Order;
 use Cart\Models\Product;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
@@ -36,9 +39,19 @@ return [
 
 	},
 
+	Address::class => function(ContainerInterface $c){
+		return new Address;
+	},
+	Customer::class => function(ContainerInterface $c){
+		return new Customer;
+	},
+	Order::class => function(ContainerInterface $c){
+		return new Order;
+	},
 	Product::class => function(ContainerInterface $c){
 		return new Product;
 	},
+
 	Basket::class => function(ContainerInterface $c){
 		return new Basket(
 			$c->get(SessionStorage::class),
