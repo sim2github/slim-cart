@@ -24,7 +24,7 @@
 										<form action="{{ path_for('cart.update', { slug:item.slug }) }}" method="post" class="form-inline">
 											<select name="quantity" class="form-control input-sm">
 												{% for num in 1..item.stock %}
-													<option value="{{ num }}"{{ (num == item.quantity) ? 'selected="selected"' : null }}>{{ num }}</option>
+													<option value="{{ num }}"{{ (num == item.quantity) ? 'selected="selected"' : '' }}>{{ num }}</option>
 												{% endfor %}
 												<option value="0">None</option>
 											</select>
