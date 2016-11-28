@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Cart\Validation\Contracts\ValidatorInterface;
 use Cart\Validation\Forms\OrderForm;
+use Braintree_Transaction;
 
 class OrderController{
 
@@ -41,6 +42,10 @@ class OrderController{
 
 		if(!$this->basket->subTotal()){
 			return $response->withRedirect($this->router->pathFor('cart.index'));
+		}
+
+		if(!$request->getParam('payment_method_nonce')){
+			return $response->withRedirect($this->router->pathFor('order.index'));
 		}
 
 		$validation = $this->validator->validate($request, OrderForm::rules());
@@ -77,7 +82,16 @@ class OrderController{
 			$this->getQuantities($orderProducts)
 		);
 
-		// Braintree
+		$result = Braintree_Transaction::sale([
+			'amount' => $this->basket->subTotal() + 5,
+			'paymentMethodNonce' => $request->getParam('payment_method_nonce'),
+			'options' => [
+				'submitForSettlement' => True
+			]
+		]);
+
+		var_dump($result);
+		die();
 	}
 
 	protected function getQuantities($items){
