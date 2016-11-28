@@ -7,8 +7,6 @@ use Slim\Views\Twig;
 use Cart\Basket\Basket;
 use Cart\Models\Address;
 use Cart\Models\Customer;
-use Cart\Models\Order;
-use Cart\Models\Product;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Cart\Validation\Contracts\ValidatorInterface;
@@ -47,9 +45,9 @@ class OrderController{
 
 		$validation = $this->validator->validate($request, OrderForm::rules());
 
-		// if($validation->fails()){
-		// 	return $response->withRedirect($this->router->pathFor('order.index'));
-		// }
+		if($validation->fails()){
+			return $response->withRedirect($this->router->pathFor('order.index'));
+		}
 
 		$hash = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 
