@@ -5,6 +5,7 @@ use function DI\get;
 use Cart\Models\Address;
 use Cart\Models\Customer;
 use Cart\Models\Order;
+use Cart\Models\Payment;
 use Cart\Models\Product;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
@@ -47,6 +48,9 @@ return [
 	},
 	Order::class => function(ContainerInterface $c){
 		return new Order;
+	},
+	Payment::class => function(ContainerInterface $c){
+		return new Payment;
 	},
 	Product::class => function(ContainerInterface $c){
 		return new Product;

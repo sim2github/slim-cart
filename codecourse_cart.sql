@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `payments` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL DEFAULT '0',
   `failed` tinyint(1) NOT NULL DEFAULT '0',
-  `transaction_id` varchar(255) DEFAULT '0',
+  `transaction_id` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
