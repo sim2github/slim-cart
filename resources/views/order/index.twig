@@ -1,5 +1,7 @@
 {% extends 'templates/app.twig' %}
 
+{% block title %}Checkout | {% endblock %}
+
 {% block content %}
 	<form action="{{ path_for('order.create') }}" method="post" autocomplete="off">
 		<div class="row">
@@ -7,7 +9,7 @@
 				<div class="row">
 					{#
 						use form.twig for default form
-						use testdata.twig form with preset values
+						use testinput.twig form with preset values
 					#}
 					{% include 'order/partials/form.twig' %}
 				</div>
