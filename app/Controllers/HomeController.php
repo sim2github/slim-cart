@@ -8,11 +8,18 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeController{
+    protected $view;
+    protected $product;
+    
+    public function __construct(Twig $view, Product $product) {
+        $this->view = $view;
+        $this->product = $product;
+    }
 
-	public function index(Request $request, Response $response, Twig $view, Product $product){
-		$products = $product->all();
+	public function index(Request $request, Response $response){
+		$products = $this->product->all();
 
-		return $view->render($response, 'home.twig', [
+		return $this->view->render($response, 'home.twig', [
 			'products' => $products
 		]);
 	}

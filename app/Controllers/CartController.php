@@ -11,41 +11,50 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Cart\Basket\Exceptions\QuantityExceededException;
 
 class CartController{
-
+	protected $view;
+	protected $router;
 	protected $basket;
 	protected $product;
 
-	public function __construct(Basket $basket, Product $product){
+	public function __construct(Twig $view, Router $router, Basket $basket, Product $product){
+		$this->view = $view;
+		$this->router = $router;
 		$this->basket = $basket;
 		$this->product = $product;
 	}
 
-	public function index(Request $request, Response $response, Twig $view){
+	public function index(Request $request, Response $response, array $args){
 		$this->basket->refresh();
-		return $view->render($response, 'cart/index.twig');
+		return $this->view->render($response, 'cart/index.twig');
 	}
 
-	public function add($slug, $quantity, Request $request, Response $response, Router $router){
+	public function add(Request $request, Response $response, array $args){
+		$slug = filter_var($args['slug'], FILTER_SANITIZE_STRING);
+		$quantity = filter_var($args['quantity'], FILTER_SANITIZE_NUMBER_INT);
+		
 		$product = $this->product->where('slug', $slug)->first();
 
 		if (!$product) {
-			return $response->withRedirect($router->pathFor('home'));
+			return $response->withRedirect($this->router->pathFor('home'));
 		}
 
 		try {
 			$this->basket->add($product, $quantity);
 		} catch (QuantityExceededException $e) {
-
+			
 		}
 
-		return $response->withRedirect($router->pathFor('cart.index'));
+		return $response->withRedirect($this->router->pathFor('cart.index'));
 	}
 
-	public function update($slug, Request $request, Response $response, Router $router){
+	public function update(Request $request, Response $response, array $args){
+		
+		$slug = filter_var($args['slug'], FILTER_SANITIZE_STRING);
+
 		$product = $this->product->where('slug', $slug)->first();
 
 		if (!$product) {
-			return $response->withRedirect($router->pathFor('home'));
+			return $response->withRedirect($this->router->pathFor('home'));
 		}
 
 		try {
@@ -54,7 +63,7 @@ class CartController{
 
 		}
 
-		return $response->withRedirect($router->pathFor('cart.index'));
+		return $response->withRedirect($this->router->pathFor('cart.index'));
 	}
 
 }

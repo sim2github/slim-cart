@@ -11,13 +11,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class ProductController{
 
 	protected $view;
+	protected $router;
+	protected $product;
 
-	public function __construct(Twig $view){
+	public function __construct(Twig $view, Router $router, Product $product){
 		$this->view = $view;
+		$this->router = $router;
+		$this->product = $product;
 	}
 
-	public function get($slug, Request $request, Response $response, Twig $view, Router $router, Product $product){
-		$product = $product->where('slug', $slug)->first();
+	public function get(Request $request, Response $response, array $args){
+		
+		$product = $this->product->where('slug', $args['slug'])->first();
+		
 
 		if (!$product) {
 			return $response->withRedirect($router->pathFor('home'));

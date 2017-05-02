@@ -16,41 +16,45 @@ use Braintree_Transaction;
 
 class OrderController{
 
-	protected $basket;
-
+	protected $view;
 	protected $router;
-
+	protected $basket;
+	protected $order;
 	protected $validator;
 
-	public function __construct(Basket $basket, Router $router, ValidatorInterface $validator){
-		$this->basket = $basket;
+	public function __construct(Twig $view, Router $router, Order $order, Basket $basket, ValidatorInterface $validator){
+		$this->view = $view;
 		$this->router = $router;
+		$this->basket = $basket;
+		$this->order = $order;
 		$this->validator = $validator;
 	}
 
-	public function index(Request $request, Response $response, Twig $view){
+	public function index(Request $request, Response $response, array $args){
 		$this->basket->refresh();
 
 		if(!$this->basket->subTotal()){
 			return $response->withRedirect($this->router->pathFor('cart.index'));
 		}
 		
-		return $view->render($response, 'order/index.twig');
+		return $this->view->render($response, 'order/index.twig');
 	}
 
-	public function show($hash, Request $request, Response $response, Twig $view, Order $order){
-		$order = $order->with(['address', 'products'])->where('hash', $hash)->first();
+	public function show(Request $request, Response $response, array $args){
+		$hash = filter_var($args['hash'], FILTER_SANITIZE_STRING);
+		
+		$order = $this->order->with(['address', 'products'])->where('hash', $hash)->first();
 
 		if (!$order) {
-			return $response->withRedirect($router->pathFor('home'));
+			return $response->withRedirect($this->router->pathFor('home'));
 		}
-		
-		return $view->render($response, 'order/show.twig', [
+
+		return $this->view->render($response, 'order/show.twig', [
 			'order' => $order,
 		]);
 	}
 
-	public function create(Request $request, Response $response){
+	public function create(Request $request, Response $response, array $args){
 		$this->basket->refresh();
 
 		if(!$this->basket->subTotal()){

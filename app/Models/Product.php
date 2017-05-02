@@ -18,7 +18,7 @@ class Product extends Model{
 	}
 
 	public function outOfStock(){
-		return $this-> stock === 0;
+		return $this-> stock == 0;
 	}
 
 	public function inStock(){
