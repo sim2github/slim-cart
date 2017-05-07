@@ -1,14 +1,13 @@
 <table class="table">
 	<tr>
-		<td>Sub total</td>
-		<td>&#8369; {{ basket.subTotal | number_format(2) }}</td>
+		<td>{{ 'cart.sum.sub.total'|trans }}</td>
+		<td>{% if settings.currency.position-left %}{{ settings.currency.symbol }} {% endif %}{{ basket.subTotal | number_format(2) }} {% if not settings.currency.position%} {{ settings.currency.symbol }} {% endif %}</td>
+	<tr>
+		<td>{{ 'cart.sum.shipping'|trans }}</td>
+        <td>{% if settings.currency.position-left %}{{ settings.currency.symbol }} {% endif %}{{ settings.shipping | number_format(2) }} {% if not settings.currency.position%} {{ settings.currency.symbol }} {% endif %}</td>
 	</tr>
 	<tr>
-		<td>Shipping</td>
-		<td>&#8369; 5.00</td>
-	</tr>
-	<tr>
-		<td class="success">Total</td>
-		<td class="success">&#8369; {{ (basket.subTotal + 5) | number_format(2) }}</td>
+		<td class="success">{{ 'cart.sum.total'|trans }}</td>
+        <td class="success">{% if settings.currency.position-left %}{{ settings.currency.symbol }} {% endif %}{{ (basket.subTotal + settings.shipping) | number_format(2) }} {% if not settings.currency.position%} {{ settings.currency.symbol }} {% endif %}</td>
 	</tr>
 </table>

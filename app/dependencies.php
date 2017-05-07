@@ -14,6 +14,10 @@ use Cart\Controllers\ProductController;
 use Cart\Controllers\CartController;
 use Cart\Controllers\OrderController;
 use Cart\Controllers\BraintreeController;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Translation\Loader\PhpFileLoader;
+use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Translator;
 
 // -----------------------------------------------------------------------------
 // Init
@@ -25,6 +29,7 @@ $settings = $container->get('settings');
 
 // Database
 use Illuminate\Database\Capsule\Manager as Capsule;
+
 $capsule = new Capsule;
 $capsule->addConnection($settings['db']);
 
@@ -41,6 +46,17 @@ Braintree_Configuration::privateKey($settings['braintree']['privateKey']);
 // -----------------------------------------------------------------------------
 // Service providers
 // -----------------------------------------------------------------------------
+$container['translator'] = function ($c) use ($settings) {
+    $translator = new Translator(
+        $settings['defaultLanguage'],
+        new MessageSelector()
+    );
+    $translator->setFallbackLocales(['en_US']);
+    $translator->addLoader('php', new PhpFileLoader());
+    $translator->addResource('php', __DIR__ . 'Lang/en_US.php', 'en_US');
+    $translator->addResource('php', '../app/Lang/ru_RU.php', 'ru_RU');
+    return $translator;
+};
 
 // Twig
 $container['view'] = function ($c) use ($settings) {
@@ -49,9 +65,8 @@ $container['view'] = function ($c) use ($settings) {
     // Add extensions
     $view->addExtension(new TwigExtension($c->get('router'), $c->get('request')->getUri()));
     $view->addExtension(new Twig_Extension_Debug());
-
+    $view->addExtension(new TranslationExtension($c->get('translator')));
 	$view->getEnvironment()->addGlobal('basket', $c->get(Basket::class));
-
     return $view;
 };
 
@@ -125,23 +140,36 @@ $container['ProductController'] = function($c) {
     return new ProductController($view, $router, $product);
 };
 
-$container['CartController'] = function($c) {
+$container['CartController'] = function($c) use ($settings) {
     $view = $c->get('view');
     $router = $c->get('router');
     $basket = $c->get(Basket::class);
     $product = $c->get(Product::class);
-    return new CartController($view, $router, $basket, $product);
+    return new CartController(
+        $view, $router, $basket, $product,
+        [
+            'currency' => $settings['currency'],
+            'shipping' => $settings['shipping.price'],
+        ]
+    );
 };
 
-$container['OrderController'] = function($c) {
+$container['OrderController'] = function($c) use ($settings) {
     $view = $c->get('view');
     $router = $c->get('router');
     $order = $c->get(Order::class);
     $basket = $c->get(Basket::class);
     $validator= $c->get(Validator::class);
-    return new OrderController($view, $router, $order, $basket, $validator);
+    return new OrderController(
+        $view, $router, $order, $basket, $validator,
+        [
+            'currency' => $settings['currency'],
+            'shipping' => $settings['shipping.price'],
+        ]
+    );
 };
 
 $container['BraintreeController'] = function($c) {
     return new BraintreeController();
 };
+

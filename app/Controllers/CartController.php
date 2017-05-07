@@ -15,17 +15,40 @@ class CartController{
 	protected $router;
 	protected $basket;
 	protected $product;
+    private $settings;
 
-	public function __construct(Twig $view, Router $router, Basket $basket, Product $product){
+    /**
+     * CartController constructor.
+     * @param Twig $view
+     * @param Router $router
+     * @param Basket $basket
+     * @param Product $product
+     * @param array $settings
+     */
+    public function __construct(
+	    Twig $view,
+        Router $router,
+        Basket $basket,
+        Product $product,
+        array $settings = []
+    ){
 		$this->view = $view;
 		$this->router = $router;
 		$this->basket = $basket;
 		$this->product = $product;
-	}
+        $this->settings = $settings;
+    }
 
 	public function index(Request $request, Response $response, array $args){
 		$this->basket->refresh();
-		return $this->view->render($response, 'cart/index.twig');
+		return $this->view->render(
+		    $response,
+            'cart/index.twig',
+            [
+                'settings' => $this->settings,
+
+            ]
+        );
 	}
 
 	public function add(Request $request, Response $response, array $args){

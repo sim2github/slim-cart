@@ -21,14 +21,25 @@ class OrderController{
 	protected $basket;
 	protected $order;
 	protected $validator;
+    protected $settings;
 
-	public function __construct(Twig $view, Router $router, Order $order, Basket $basket, ValidatorInterface $validator){
+    /**
+     * OrderController constructor.
+     * @param Twig $view
+     * @param Router $router
+     * @param Order $order
+     * @param Basket $basket
+     * @param ValidatorInterface $validator
+     * @param array $settings
+     */
+    public function __construct(Twig $view, Router $router, Order $order, Basket $basket, ValidatorInterface $validator, array $settings){
 		$this->view = $view;
 		$this->router = $router;
 		$this->basket = $basket;
 		$this->order = $order;
 		$this->validator = $validator;
-	}
+        $this->settings = $settings;
+    }
 
 	public function index(Request $request, Response $response, array $args){
 		$this->basket->refresh();
@@ -37,7 +48,12 @@ class OrderController{
 			return $response->withRedirect($this->router->pathFor('cart.index'));
 		}
 		
-		return $this->view->render($response, 'order/index.twig');
+		return $this->view->render(
+		    $response, 'order/index.twig',
+            [
+                'settings' => $this->settings
+            ]
+        );
 	}
 
 	public function show(Request $request, Response $response, array $args){
@@ -51,6 +67,7 @@ class OrderController{
 
 		return $this->view->render($response, 'order/show.twig', [
 			'order' => $order,
+            'settings' => $this->settings
 		]);
 	}
 

@@ -11,7 +11,7 @@
     "braintree/braintree_php": "^3.23",
     "symfony/twig-bridge": "^3.2",
     "twig/extensions": "^1.4",
-    "davedevelopment/phpmig": "^1.3"
+    "davedevelopment/phpmig": "dev-master"
   },
   "autoload": {
     "psr-4": {
@@ -24,6 +24,12 @@
         ],
         "migrate": [
             "php vendor/bin/phpmig migrate"
+        ],
+        "start": [
+          "php -S 0.0.0.0:8888 -t public/ public/index.php"
         ]
-    }
+    },
+  "require-dev": {
+    "symfony/var-dumper": "^3.2"
+  }
 }

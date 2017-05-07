@@ -1,5 +1,5 @@
 <?php
-
+setlocale(LC_ALL, 'ru_RUS.utf8');
 require __DIR__ . '/../vendor/autoload.php';
 session_start();
 // Instantiate the app

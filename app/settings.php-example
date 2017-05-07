@@ -5,6 +5,13 @@ return [
         // Slim Settings
         'determineRouteBeforeAppMiddleware' => false,
         'displayErrorDetails' => true,
+        // Locale
+        'defaultLanguage' => 'en_US',
+        'currency' => [
+            'symbol' => '$',
+            'position-left' => true, // if false - position right
+        ],
+        'shipping.price' => 5,
         // View settings
         'view' => [
             'template_path' => __DIR__ . '/Views',

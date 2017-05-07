@@ -10,9 +10,9 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th>Product</th>
-								<th>Price</th>
-								<th>Quantity</th>
+								<th>{{ 'cart.product'|trans }}</th>
+								<th>{{ 'cart.price'|trans }}</th>
+								<th>{{ 'cart.quantity'|trans }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -21,16 +21,16 @@
 									<td>
 										<a href="{{ path_for('product.get', { slug: item.slug }) }}">{{ item.title }}</a>
 									</td>
-									<td>&#8369; {{ item.price | number_format(2) }}</td>
+									<td>{% if settings.currency.position-left %}{{ settings.currency.symbol }} {% endif %}{{ item.price | number_format(2) }} {% if not settings.currency.position%} {{ settings.currency.symbol }} {% endif %}</td>
 									<td>
 										<form action="{{ path_for('cart.update', { slug:item.slug }) }}" method="post" class="form-inline">
 											<select name="quantity" class="form-control input-sm">
 												{% for num in 1..item.stock %}
 													<option value="{{ num }}"{{ (num == item.quantity) ? 'selected="selected"' : '' }}>{{ num }}</option>
 												{% endfor %}
-												<option value="0">None</option>
+												<option value="0">{{ 'none'|trans }}</option>
 											</select>
-											<input type="submit" value="Update" class="btn btn-default btn-sm">
+											<input type="submit" value="{{ 'update'|trans }}" class="btn btn-default btn-sm">
 										</form>
 									</td>
 								</tr>
@@ -38,19 +38,20 @@
 						</tbody>
 					</table>
 				</div>
+				</p>
 			{% else %}
-				<p>You have no items in your cart. <a href="{{ path_for('home') }}">Start shopping</a></p>
+				<p>{{'cart.no.item.message'|trans }} <a href="{{ path_for('home') }}">{{'cart.no.item.message.link.name'|trans }}</a>
 			{% endif %}
 		</div>
 		<div class="col-md-4">
 			{% if basket.itemCount and basket.subTotal %}
 				<div class="well">
-					<h4>Cart summary</h4>
+					<h4>{{ 'cart.sum.header'|trans }}</h4>
 					<hr>
 
 					{% include 'cart/partials/summary.twig' %}
 
-					<a href="{{ path_for('order.index') }}" class="btn btn-default">Checkout</a>
+					<a href="{{ path_for('order.index') }}" class="btn btn-default">{{ 'cart.checkout'|trans }}</a>
 				</div>
 			{% endif %}
 		</div>

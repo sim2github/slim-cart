@@ -1,9 +1,9 @@
 <div class="col-md-6">
-	<h3>Your details</h3>
+	<h3>{{ 'order.form.your.details'|trans }}</h3>
 	<hr>
 
 	<div class="form-group{{ (errors.email) ? ' has-error' : '' }}">
-		<label for="email">Email</label>
+		<label for="email">{{ 'order.form.your.details.email'|trans }}</label>
 		<input type="email" name="email" id="email" class="form-control" value="{{ old.email }}">
 		{% if errors.email %}
 			<span class="help-block">
@@ -13,7 +13,7 @@
 	</div>
 
 	<div class="form-group{{ (errors.name) ? ' has-error' : '' }}">
-		<label for="name">Full name</label>
+		<label for="name">{{ 'order.form.your.details.full.name'|trans }}</label>
 		<input type="text" name="name" id="name" class="form-control" value="{{ old.name }}">
 		{% if errors.name %}
 			<span class="help-block">
@@ -23,11 +23,11 @@
 	</div>
 </div>
 <div class="col-md-6">
-	<h3>Shipping address</h3>
+	<h3>{{ 'order.form.shipping'|trans }}</h3>
 	<hr>
 
 	<div class="form-group{{ (errors.address1) ? ' has-error' : '' }}">
-		<label for="address1">Address line 1</label>
+		<label for="address1">{{ 'order.form.shipping.address'|trans({'%Num%': 1}) }}</label>
 		<input type="text" name="address1" id="address1" class="form-control" value="{{ old.address1 }}">
 		{% if errors.address1 %}
 			<span class="help-block">
@@ -37,7 +37,7 @@
 	</div>
 
 	<div class="form-group{{ (errors.address2) ? ' has-error' : '' }}">
-		<label for="address2">Address line 2</label>
+		<label for="address2">{{  'order.form.shipping.address'|trans({'%Num%': 2})  }}</label>
 		<input type="text" name="address2" id="address2" class="form-control" value="{{ old.address2 }}">
 		{% if errors.address2 %}
 			<span class="help-block">
@@ -47,7 +47,7 @@
 	</div>
 
 	<div class="form-group{{ (errors.city) ? ' has-error' : '' }}">
-		<label for="city">City</label>
+		<label for="city">{{ 'order.form.shipping.city'|trans }}</label>
 		<input type="text" name="city" id="city" class="form-control" value="{{ old.city }}">
 		{% if errors.city %}
 			<span class="help-block">
@@ -57,7 +57,7 @@
 	</div>
 
 	<div class="form-group{{ (errors.postal_code) ? ' has-error' : '' }}">
-		<label for="postal_code">Postal code</label>
+		<label for="postal_code">{{ 'order.form.shipping.postal.code'|trans }}</label>
 		<input type="text" name="postal_code" id="postal_code" class="form-control" value="{{ old.postal_code }}">
 		{% if errors.postal_code %}
 			<span class="help-block">
