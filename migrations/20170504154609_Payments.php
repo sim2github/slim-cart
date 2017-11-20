@@ -11,15 +11,13 @@ class Payments extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('payments', function(Blueprint $table)
-        {
+        Capsule::schema()->create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned()->default(0);
             $table->tinyInteger('failed')->unsigned()->default(0);
             $table->string('transaction_id')->nullable();
             $table->timestamps();
         });
-
     }
 
     /**

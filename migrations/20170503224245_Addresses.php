@@ -11,8 +11,7 @@ class Addresses extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('addresses', function(Blueprint $table)
-        {
+        Capsule::schema()->create('addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->string('address1', 255);
             $table->string('address2', 255)->nullable();
@@ -20,7 +19,6 @@ class Addresses extends Migration
             $table->string('postal_code', 255);
             $table->timestamps();
         });
-
     }
 
     /**

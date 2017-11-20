@@ -19,7 +19,6 @@ class ProductsExamples extends Migration
         );
         
         Capsule::table('products')->insert($data);
-
     }
 
     /**

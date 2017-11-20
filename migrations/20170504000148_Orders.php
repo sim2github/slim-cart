@@ -11,8 +11,7 @@ class Orders extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('orders', function(Blueprint $table)
-        {
+        Capsule::schema()->create('orders', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             
             $table->increments('id');

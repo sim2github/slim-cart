@@ -4,32 +4,35 @@ namespace Cart\Events;
 
 use Cart\Handlers\Contracts\HandlerInterface;
 
-class Event{
-	protected $handlers = [];
+class Event
+{
+    protected $handlers = [];
 
-	public function attach($handlers){
-		if(is_array($handlers)){
-			foreach($handlers as $handler){
-				if(!$handler instanceof HandlerInterface){
-					continue;
-				}
+    public function attach($handlers)
+    {
+        if (is_array($handlers)) {
+            foreach ($handlers as $handler) {
+                if (!$handler instanceof HandlerInterface) {
+                    continue;
+                }
 
-				$this->handlers[] = $handler;
-			}
+                $this->handlers[] = $handler;
+            }
 
-			return;
-		}
+            return;
+        }
 
-		if(!$handlers instanceof HandlerInterface){
-			return;
-		}
+        if (!$handlers instanceof HandlerInterface) {
+            return;
+        }
 
-		$this->handlers[] = $handlers;
-	}
+        $this->handlers[] = $handlers;
+    }
 
-	public function dispatch(){
-		foreach($this->handlers as $handler){
-			$handler->handle($this);
-		}
-	}
+    public function dispatch()
+    {
+        foreach ($this->handlers as $handler) {
+            $handler->handle($this);
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Cart\Handlers\Contracts;
 
-interface HandlerInterface{
-	public function handle($event);
+interface HandlerInterface
+{
+    public function handle($event);
 }

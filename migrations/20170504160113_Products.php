@@ -11,8 +11,7 @@ class Products extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('products', function(Blueprint $table)
-        {
+        Capsule::schema()->create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
             $table->string('slug')->unique();
@@ -22,7 +21,6 @@ class Products extends Migration
             $table->integer('stock')->unsigned();
             $table->timestamps();
         });
-
     }
 
     /**

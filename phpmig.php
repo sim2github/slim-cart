@@ -3,6 +3,7 @@
 require_once 'vendor/autoload.php';
 use Phpmig\Adapter;
 use Illuminate\Database\Capsule\Manager as Capsule;
+
 $config    = require_once 'app/settings.php';
 $capsule   = new Capsule;
 $capsule->addConnection($config['settings']['db']);

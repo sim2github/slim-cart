@@ -5,32 +5,36 @@ namespace Cart\Models;
 use Cart\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model{
+class Product extends Model
+{
+    public $quantity = null;
 
-	public $quantity = null;
+    public function hasLowStock()
+    {
+        if ($this->outOfStock()) {
+            return false;
+        }
 
-	public function hasLowStock(){
-		if ($this->outOfStock()) {
-			return false;
-		}
+        return (bool) ($this->stock <= 5);
+    }
 
-		return (bool) ($this->stock <= 5);
-	}
+    public function outOfStock()
+    {
+        return $this-> stock == 0;
+    }
 
-	public function outOfStock(){
-		return $this-> stock == 0;
-	}
+    public function inStock()
+    {
+        return $this-> stock >= 1;
+    }
 
-	public function inStock(){
-		return $this-> stock >= 1;
-	}
+    public function hasStock($quantity)
+    {
+        return $this-> stock >= $quantity;
+    }
 
-	public function hasStock($quantity){
-		return $this-> stock >= $quantity;
-	}
-
-	public function order(){
-		return $this->belongsTo(Order::class, 'orders_products')->withPivot('quantity');
-	}
-
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'orders_products')->withPivot('quantity');
+    }
 }

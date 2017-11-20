@@ -11,14 +11,12 @@ class Customers extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('customers', function(Blueprint $table)
-        {
+        Capsule::schema()->create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 90);
             $table->string('email', 70)->unique();
             $table->timestamps();
         });
-
     }
 
     /**

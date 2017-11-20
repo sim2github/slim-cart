@@ -11,15 +11,12 @@ class OrdersProducts extends Migration
      */
     public function up()
     {
-        Capsule::schema()->create('orders_products', function(Blueprint $table)
-        {
+        Capsule::schema()->create('orders_products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned();
             $table->integer('product_id')->unsigned();
             $table->integer('quantity')->unsigned();
-            
         });
-
     }
 
     /**

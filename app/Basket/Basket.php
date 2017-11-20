@@ -6,98 +6,108 @@ use Cart\Models\Product;
 use Cart\Support\Storage\Contracts\StorageInterface;
 use Cart\Basket\Exceptions\QuantityExceededException;
 
-class Basket{
+class Basket
+{
+    protected $storage;
+    protected $product;
 
-	protected $storage;
-	protected $product;
+    public function __construct(StorageInterface $storage, Product $product)
+    {
+        $this->storage = $storage;
+        $this->product = $product;
+    }
 
-	public function __construct(StorageInterface $storage, Product $product){
-		$this->storage = $storage;
-		$this->product = $product;
-	}
+    public function add(Product $product, $quantity)
+    {
+        if ($this->has($product)) {
+            $quantity = $this->get($product)['quantity'] + $quantity;
+        }
 
-	public function add(Product $product, $quantity){
-		if ($this->has($product)) {
-			$quantity = $this->get($product)['quantity'] + $quantity;
-		}
+        $this->update($product, $quantity);
+    }
 
-		$this->update($product, $quantity);
-	}
+    public function update(Product $product, $quantity)
+    {
+        if (!$this->product->find($product->id)->hasStock($quantity)) {
+            throw new QuantityExceededException;
+        }
 
-	public function update(Product $product, $quantity){
-		if (!$this->product->find($product->id)->hasStock($quantity)) {
-			throw new QuantityExceededException;
-		}
+        if ((int) $quantity === 0) {
+            $this->remove($product);
+            return;
+        }
 
-		if ((int) $quantity === 0) {
-			$this->remove($product);
-			return;
-		}
+        $this->storage->set($product->id, [
+            'product_id' => (int) $product->id,
+            'quantity' => (int) $quantity,
+        ]);
+    }
 
-		$this->storage->set($product->id, [
-			'product_id' => (int) $product->id,
-			'quantity' => (int) $quantity,
-		]);
-	}
+    public function remove(Product $product)
+    {
+        $this->storage->remove($product->id);
+    }
 
-	public function remove(Product $product){
-		$this->storage->remove($product->id);
-	}
+    public function has(Product $product)
+    {
+        return $this->storage->exists($product->id);
+    }
 
-	public function has(Product $product){
-		return $this->storage->exists($product->id);
-	}
+    public function get(Product $product)
+    {
+        return $this->storage->get($product->id);
+    }
 
-	public function get(Product $product){
-		return $this->storage->get($product->id);
-	}
+    public function clear()
+    {
+        return $this->storage->clear();
+    }
 
-	public function clear(){
-		return $this->storage->clear();
-	}
+    public function all()
+    {
+        $ids = [];
+        $items = [];
 
-	public function all(){
-		$ids = [];
-		$items = [];
+        foreach ($this->storage->all() as $product) {
+            $ids[] = $product['product_id'];
+        }
 
-		foreach ($this->storage->all() as $product) {
-			$ids[] = $product['product_id'];
-		}
+        $products = $this->product->find($ids);
 
-		$products = $this->product->find($ids);
+        foreach ($products as $product) {
+            $product->quantity = $this->get($product)['quantity'];
+            $items[] = $product;
+        }
 
-		foreach ($products as $product) {
-			$product->quantity = $this->get($product)['quantity'];
-			$items[] = $product;
-		}
+        return $items;
+    }
 
-		return $items;
-	}
+    public function itemCount()
+    {
+        return count($this->storage);
+    }
 
-	public function itemCount(){
-		return count($this->storage);
-	}
+    public function subTotal()
+    {
+        $total = 0;
 
-	public function subTotal(){
-		$total = 0;
+        foreach ($this->all() as $item) {
+            if ($item->outOfStock()) {
+                continue;
+            }
 
-		foreach ($this->all() as $item) {
-			if ($item->outOfStock()) {
-				continue;
-			}
+            $total += ($item->price * $item->quantity);
+        }
 
-			$total += ($item->price * $item->quantity);
-		}
+        return $total;
+    }
 
-		return $total;
-	}
-
-	public function refresh(){
-		foreach($this->all() as $item){
-			if(!$item->hasStock($item->quantity)){
-				$this->update($item, $item->stock);
-			}
-		}
-	}
-
+    public function refresh()
+    {
+        foreach ($this->all() as $item) {
+            if (!$item->hasStock($item->quantity)) {
+                $this->update($item, $item->stock);
+            }
+        }
+    }
 }

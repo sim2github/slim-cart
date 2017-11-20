@@ -66,7 +66,7 @@ $container['view'] = function ($c) use ($settings) {
     $view->addExtension(new TwigExtension($c->get('router'), $c->get('request')->getUri()));
     $view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new TranslationExtension($c->get('translator')));
-	$view->getEnvironment()->addGlobal('basket', $c->get(Basket::class));
+    $view->getEnvironment()->addGlobal('basket', $c->get(Basket::class));
     return $view;
 };
 
@@ -105,10 +105,10 @@ $container[Product::class] = function ($c) {
 
 
 $container[Basket::class] = function ($c) {
-	return new Basket(
-		$c->get(SessionStorage::class),
-		$c->get(Product::class)
-	);
+    return new Basket(
+        $c->get(SessionStorage::class),
+        $c->get(Product::class)
+    );
 };
 
 // -----------------------------------------------------------------------------
@@ -127,26 +127,29 @@ $container['logger'] = function ($c) use ($settings) {
 // Controllers factories
 // -----------------------------------------------------------------------------
 
-$container['HomeController'] = function($c) {
+$container['HomeController'] = function ($c) {
     $view = $c->get('view');
     $product = $c->get(Product::class);
     return new HomeController($view, $product);
 };
 
-$container['ProductController'] = function($c) {
+$container['ProductController'] = function ($c) {
     $view = $c->get('view');
     $router = $c->get('router');
     $product = $c->get(Product::class);
     return new ProductController($view, $router, $product);
 };
 
-$container['CartController'] = function($c) use ($settings) {
+$container['CartController'] = function ($c) use ($settings) {
     $view = $c->get('view');
     $router = $c->get('router');
     $basket = $c->get(Basket::class);
     $product = $c->get(Product::class);
     return new CartController(
-        $view, $router, $basket, $product,
+        $view,
+        $router,
+        $basket,
+        $product,
         [
             'currency' => $settings['currency'],
             'shipping' => $settings['shipping.price'],
@@ -154,14 +157,18 @@ $container['CartController'] = function($c) use ($settings) {
     );
 };
 
-$container['OrderController'] = function($c) use ($settings) {
+$container['OrderController'] = function ($c) use ($settings) {
     $view = $c->get('view');
     $router = $c->get('router');
     $order = $c->get(Order::class);
     $basket = $c->get(Basket::class);
     $validator= $c->get(Validator::class);
     return new OrderController(
-        $view, $router, $order, $basket, $validator,
+        $view,
+        $router,
+        $order,
+        $basket,
+        $validator,
         [
             'currency' => $settings['currency'],
             'shipping' => $settings['shipping.price'],
@@ -169,7 +176,6 @@ $container['OrderController'] = function($c) use ($settings) {
     );
 };
 
-$container['BraintreeController'] = function($c) {
+$container['BraintreeController'] = function ($c) {
     return new BraintreeController();
 };
-
